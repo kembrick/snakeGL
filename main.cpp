@@ -3,12 +3,11 @@
 #include <cstdio>
 #include <GL/glut.h>
 
-const int N = 30, M = 20;
-const int SCALE = 25;
+const int N = 30, M = 20, SCALE = 25, START_SPEED = 80;
 const int INITIAL_LEN = 4;
 int W = SCALE * N;
 int H = SCALE * M;
-int dir, num = INITIAL_LEN;
+int dir, num = INITIAL_LEN, speed = START_SPEED;
 
 void setTitleScore();
 
@@ -28,7 +27,7 @@ class Fruits
     }
     void DrawApple()
     {
-       glColor3f(0.5, 0.0, 0.0); // цвет корма
+       glColor3f(0.5, 0.5, 0.0); // цвет корма
        glRectf(x * SCALE,y * SCALE,(x + 1) * SCALE,(y + 1) * SCALE);
     }
 } m[10];
@@ -47,24 +46,26 @@ void tick()
         s[i].x = s[i - 1].x;
         s[i].y = s[i - 1].y;
     }
-    if (dir == 0) s[0].y += 1;
-    if (dir == 1) s[0].x -= 1;
-    if (dir == 2) s[0].x += 1;
-    if (dir == 3) s[0].y -= 1;
-    for (auto & i : m) if ((s[0].x == i.x) && (s[0].y == i.y)) {
+    if (dir == 0) s[0].x--;
+    if (dir == 1) s[0].y++;
+    if (dir == 2) s[0].x++;
+    if (dir == 3) s[0].y--;
+    for (auto & i : m) if ((s[0].x == i.x) && (s[0].y == i.y)) { // змея растет
         num++;
         i.New();
         setTitleScore();
+        if (speed > 40) speed -= (num - INITIAL_LEN);
     }
-    for (int i = 1; i < num; i++) if (s[0].x == s[i].x && s[0].y == s[i].y) {
+    for (int i = 1; i < num; i++) if (s[0].x == s[i].x && s[0].y == s[i].y) { // змея врезалась
         num = INITIAL_LEN; // в оригинале было i - это некорректно
         setTitleScore();
+        speed = START_SPEED;
     }
     // проверка с нестрогим равенством приводила к тому, что змея могла уползти за пределы экрана
-    if (s[0].x >= N) dir = 1;
-    if (s[0].x <= 0) dir = 2;
+    if (s[0].x >= N) dir = 0;
+    if (s[0].x < 0) dir = 2;
     if (s[0].y >= M) dir = 3;
-    if (s[0].y <= 0) dir = 0;
+    if (s[0].y < 0) dir = 1;
 }
 
 void drawField()
@@ -98,31 +99,16 @@ void setTitleScore() {
     glutSetWindowTitle(winTitle);
 }
 
-void KeyboardEvent(int key, int a, int b)
+void keyboardEvent(int key, int a, int b)
 {
-    switch(key) {
-        case 101:
-            dir = 0;
-            break;
-        case 102:
-            dir = 2;
-            break;
-        case 100:
-            dir = 1;
-            break;
-        case 103:
-            dir = 3;
-            break;
-        default:
-            break;
-     }
+    if (key > 99 && key < 104) dir = key - 100;
 }
 
 void timer(int = 0)
 {
     display();
     tick();
-    glutTimerFunc(80, timer,0);
+    glutTimerFunc(speed, timer,0);
 }
 
 int main(int argc, char **argv) {
@@ -132,7 +118,7 @@ int main(int argc, char **argv) {
     s[i].x = 10;
     s[i].y = 10;
     glutInit(&argc, argv);
-    glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB );
+    glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
     glutInitWindowSize (W, H);
     glutCreateWindow ("Snake");
     setTitleScore();
@@ -141,7 +127,7 @@ int main(int argc, char **argv) {
     glLoadIdentity();
     gluOrtho2D(0, W, 0, H);
     glutDisplayFunc (display);
-    glutSpecialFunc(KeyboardEvent);
-    glutTimerFunc(80, timer, 0);
+    glutSpecialFunc(keyboardEvent);
+    glutTimerFunc(speed, timer, 0);
     glutMainLoop();
 }
