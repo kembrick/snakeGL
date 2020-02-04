@@ -1,4 +1,5 @@
-Snake GL
+Snake 
+Выполнена на основе кода (с) FamTrinli https://www.youtube.com/watch?v=cEWNPLtBTAM 
 
 Установка необходимых библиотек
 $ sudo apt-get update
