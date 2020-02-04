@@ -1,4 +1,3 @@
-/* Змейка на основе кода (с) FamTrinli https://www.youtube.com/watch?v=cEWNPLtBTAM */
 #include <ctime>
 #include <cstdlib>
 #include <cstdio>
