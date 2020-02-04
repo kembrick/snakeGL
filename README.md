@@ -1,5 +1,6 @@
-Snake
-Выполнена на основе кода (с) FamTrinli https://www.youtube.com/watch?v=cEWNPLtBTAM 
+Игра "Snake"
+
+Выполнена с использованием библиотеки openGL на основе кода (с) FamTrinli https://www.youtube.com/watch?v=cEWNPLtBTAM 
 
 Установка необходимых библиотек
 $ sudo apt-get update
