@@ -5,15 +5,14 @@
 
 const int N = 30, M = 20, SCALE = 30; // количество ячеек и масштаб
 const int INITIAL_LEN = 4, START_SPEED = 80, FEED_NUM = 10; // начальная длина змеи, скорость, количество кормушек
-int W = SCALE * N;
-int H = SCALE * M;
+int W = SCALE * N, H = SCALE * M;
 int dir, num = INITIAL_LEN, speed = START_SPEED;
 
 struct
 {
     int x;
     int y;
-} s[100];
+} s[500];
 
 class Fruits
 {
@@ -78,7 +77,7 @@ void tick()
         num++;
         i.New();
         setTitleScore();
-        if (speed > 40) speed -= (num - INITIAL_LEN);
+        if (speed > 40) speed -= (int)((num - INITIAL_LEN) / 5);
     }
 }
 
